@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.11.3">
+  <bpmn:collaboration id="Collaboration_1xptk0j">
+    <bpmn:participant id="Participant_1d8t9fl" name="Food Service" processRef="Process_pizza-service-technical-service-integration" />
+    <bpmn:participant id="Participant_164kw4m" name="Customer" />
+    <bpmn:messageFlow id="MessageFlow_1p9vk0n" name="API call" sourceRef="Participant_164kw4m" targetRef="StartEvent_0z55xd6" />
+    <bpmn:messageFlow id="MessageFlow_192dkc0" name="Pizza" sourceRef="Task_1io3xtp" targetRef="Participant_164kw4m" />
+    <bpmn:messageFlow id="MessageFlow_1oi1z0a" name="Money" sourceRef="Participant_164kw4m" targetRef="Task_15r08ui" />
+    <bpmn:messageFlow id="MessageFlow_0lsjbrw" name="Receipt" sourceRef="Task_0ltq38t" targetRef="Participant_164kw4m" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_pizza-service-technical-service-integration" isExecutable="true">
+    <bpmn:laneSet>
+      <bpmn:lane id="Lane_10ojf77" name="Courier">
+        <bpmn:flowNodeRef>Task_1io3xtp</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_15r08ui</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1ntqfca" name="Pizza Service">
+        <bpmn:flowNodeRef>StartEvent_0z55xd6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_0x10x9r</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_02ejw45</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_0ltq38t</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_0t8xnxn</bpmn:flowNodeRef>
+        <bpmn:childLaneSet xsi:type="bpmn:tLaneSet">
+          <bpmn:lane id="Lane_0pdqwae" name="Automatic">
+            <bpmn:flowNodeRef>StartEvent_0z55xd6</bpmn:flowNodeRef>
+            <bpmn:flowNodeRef>Task_02ejw45</bpmn:flowNodeRef>
+            <bpmn:flowNodeRef>Task_0ltq38t</bpmn:flowNodeRef>
+            <bpmn:flowNodeRef>EndEvent_0t8xnxn</bpmn:flowNodeRef>
+          </bpmn:lane>
+          <bpmn:lane id="Lane_1y0hu8p" name="Chef">
+            <bpmn:flowNodeRef>Task_0x10x9r</bpmn:flowNodeRef>
+          </bpmn:lane>
+        </bpmn:childLaneSet>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="SequenceFlow_03m2lmt" sourceRef="Task_0x10x9r" targetRef="Task_1io3xtp" />
+    <bpmn:sequenceFlow id="SequenceFlow_0386v5v" sourceRef="Task_15r08ui" targetRef="Task_0ltq38t" />
+    <bpmn:sequenceFlow id="SequenceFlow_1nd7ewf" sourceRef="Task_1io3xtp" targetRef="Task_15r08ui" />
+    <bpmn:sequenceFlow id="SequenceFlow_1v9loiy" sourceRef="StartEvent_0z55xd6" targetRef="Task_02ejw45" />
+    <bpmn:sequenceFlow id="SequenceFlow_0kol26o" sourceRef="Task_02ejw45" targetRef="Task_0x10x9r" />
+    <bpmn:startEvent id="StartEvent_0z55xd6" name="Pizza order received">
+      <bpmn:extensionElements>
+        <camunda:formData businessKey="businessKey">
+          <camunda:formField id="pizzaType" label="Pizza" type="string" />
+          <camunda:formField id="pizzaSize" label="Grösse" type="string" />
+          <camunda:formField id="pizzaSauce" label="Sauce" type="string" />
+          <camunda:formField id="pizzaCrust" label="Rand" type="string" />
+          <camunda:formField id="pizzaTopping" label="Belag" type="string" />
+          <camunda:formField id="customerFirstName" label="Vorname" type="string" />
+          <camunda:formField id="customerLastName" label="Nachname" type="string" />
+          <camunda:formField id="customerAddress" label="Lieferadresse" type="string" />
+          <camunda:formField id="customerEmail" label="E-Mail" type="string" />
+          <camunda:formField id="pizzaPrice" label="Preis" type="string" defaultValue="19.90" />
+          <camunda:formField id="pizzaSheetURL" label="Pizza Sheet URL" type="string" />
+          <camunda:formField id="businessKey" label="Business Key" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_1v9loiy</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_1bee4md" />
+    </bpmn:startEvent>
+    <bpmn:dataStoreReference id="DataStoreReference_0elmzu3" name="CRM" />
+    <bpmn:userTask id="Task_0x10x9r" name="Bake pizza">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="pizzaType" label="Pizza" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaSize" label="Grösse" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaSauce" label="Sauce" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaCrust" label="Rand" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaTopping" label="Belag" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="customerFirstName" label="Vorname" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="customerLastName" label="Nachname" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="customerAddress" label="Lieferadresse" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="customerEmail" label="E-Mail" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaPrice" label="Preis" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaSheetURL" label="Pizza Sheet URL" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0kol26o</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_03m2lmt</bpmn:outgoing>
+      <bpmn:property id="Property_1pucswi" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_1pv2cw8">
+        <bpmn:sourceRef>DataStoreReference_0elmzu3</bpmn:sourceRef>
+        <bpmn:targetRef>Property_1pucswi</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_1io3xtp" name="Deliver pizza">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="pizzaType" label="Pizza" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaSize" label="Grösse" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaSauce" label="Sauce" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaCrust" label="Rand" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaTopping" label="Belag" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="customerFirstName" label="Vorname" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="customerLastName" label="Nachname" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="customerAddress" label="Lieferadresse" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="customerEmail" label="E-Mail" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaPrice" label="Preis" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaSheetURL" label="Pizza Sheet URL" type="string">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="pizzaPayment" label="Zahlungsbetrag" type="string" defaultValue="19.90" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_03m2lmt</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1nd7ewf</bpmn:outgoing>
+      <bpmn:property id="Property_052chmx" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_1a4fmqt">
+        <bpmn:sourceRef>DataStoreReference_0elmzu3</bpmn:sourceRef>
+        <bpmn:targetRef>Property_052chmx</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+    </bpmn:userTask>
+    <bpmn:manualTask id="Task_15r08ui" name="Collect money">
+      <bpmn:incoming>SequenceFlow_1nd7ewf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0386v5v</bpmn:outgoing>
+    </bpmn:manualTask>
+    <bpmn:serviceTask id="Task_02ejw45" name="Create order">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">https://hook.integromat.com/yadqocw19ridutzhnavftbdl46ndl7dk</camunda:inputParameter>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[var out = JSON.stringify({
+    "pizzaType": execution.getVariable("pizzaType"),
+    "pizzaSize": execution.getVariable("pizzaSize"),
+    "pizzaSauce": execution.getVariable("pizzaSauce"),
+    "pizzaCrust": execution.getVariable("pizzaCrust"),
+    "pizzaTopping": execution.getVariable("pizzaTopping"),
+    "customerFirstName": execution.getVariable("customerFirstName"),
+    "customerLastName": execution.getVariable("customerLastName"),
+    "customerAddress": execution.getVariable("customerAddress"),
+    "customerEmail": execution.getVariable("customerEmail"),
+    "pizzaPrice": execution.getVariable("pizzaPrice"),
+    "businessKey": execution.getProcessBusinessKey()
+});
+out ;]]></camunda:script>
+            </camunda:inputParameter>
+            <camunda:outputParameter name="pizzaSheetURL">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[var response = JSON.parse(connector.getVariable("response"));
+response.pizzaSheetURL;]]></camunda:script>
+            </camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1v9loiy</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0kol26o</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_0qkwnbg">
+        <bpmn:targetRef>DataStoreReference_0elmzu3</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0nofw76" sourceRef="Task_0ltq38t" targetRef="EndEvent_0t8xnxn" />
+    <bpmn:sendTask id="Task_0ltq38t" name="Send receipt">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url">https://hook.integromat.com/aov8jkl7ldjwyiwh64of755batkvwyq7</camunda:inputParameter>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[var out = JSON.stringify({
+    "businessKey": execution.getProcessBusinessKey(),
+    "pizzaPayment": execution.getVariable("pizzaPayment")
+});
+out ;]]></camunda:script>
+            </camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0386v5v</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0nofw76</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="EndEvent_0t8xnxn" name="Pizza delivered">
+      <bpmn:incoming>SequenceFlow_0nofw76</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_1bee4md" name="Message_pizza-service-technical-service-integration" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1xptk0j">
+      <bpmndi:BPMNShape id="Participant_1d8t9fl_di" bpmnElement="Participant_1d8t9fl">
+        <dc:Bounds x="116" y="182" width="965" height="410" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_1bxmz45_di" bpmnElement="Participant_164kw4m">
+        <dc:Bounds x="116" y="33" width="965" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_10ojf77_di" bpmnElement="Lane_10ojf77">
+        <dc:Bounds x="146" y="182" width="935" height="126" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1ntqfca_di" bpmnElement="Lane_1ntqfca">
+        <dc:Bounds x="146" y="308" width="935" height="284" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_1p9vk0n_di" bpmnElement="MessageFlow_1p9vk0n">
+        <di:waypoint xsi:type="dc:Point" x="246" y="93" />
+        <di:waypoint xsi:type="dc:Point" x="246" y="362" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="256" y="117.99999999999999" width="38" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_03m2lmt_di" bpmnElement="SequenceFlow_03m2lmt">
+        <di:waypoint xsi:type="dc:Point" x="582" y="486" />
+        <di:waypoint xsi:type="dc:Point" x="582" y="242" />
+        <di:waypoint xsi:type="dc:Point" x="620" y="242" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="552" y="358" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1nd7ewf_di" bpmnElement="SequenceFlow_1nd7ewf">
+        <di:waypoint xsi:type="dc:Point" x="720" y="242" />
+        <di:waypoint xsi:type="dc:Point" x="758" y="242" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="694" y="221" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0t8xnxn_di" bpmnElement="EndEvent_0t8xnxn">
+        <dc:Bounds x="1008" y="362" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="989" y="402" width="74" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0386v5v_di" bpmnElement="SequenceFlow_0386v5v">
+        <di:waypoint xsi:type="dc:Point" x="808" y="282" />
+        <di:waypoint xsi:type="dc:Point" x="808" y="380" />
+        <di:waypoint xsi:type="dc:Point" x="841" y="380" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="778" y="325" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_192dkc0_di" bpmnElement="MessageFlow_192dkc0">
+        <di:waypoint xsi:type="dc:Point" x="670" y="202" />
+        <di:waypoint xsi:type="dc:Point" x="670" y="93" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="678" y="118" width="27" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_1oi1z0a_di" bpmnElement="MessageFlow_1oi1z0a">
+        <di:waypoint xsi:type="dc:Point" x="808" y="93" />
+        <di:waypoint xsi:type="dc:Point" x="808" y="202" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="765" y="118" width="33" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_0lsjbrw_di" bpmnElement="MessageFlow_0lsjbrw">
+        <di:waypoint xsi:type="dc:Point" x="891" y="340" />
+        <di:waypoint xsi:type="dc:Point" x="891" y="93" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="895" y="119.5733359359751" width="38" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1v9loiy_di" bpmnElement="SequenceFlow_1v9loiy">
+        <di:waypoint xsi:type="dc:Point" x="264" y="380" />
+        <di:waypoint xsi:type="dc:Point" x="302" y="380" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="238" y="359" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Lane_0pdqwae_di" bpmnElement="Lane_0pdqwae">
+        <dc:Bounds x="176" y="308" width="905" height="142" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1y0hu8p_di" bpmnElement="Lane_1y0hu8p">
+        <dc:Bounds x="176" y="450" width="905" height="142" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0kol26o_di" bpmnElement="SequenceFlow_0kol26o">
+        <di:waypoint xsi:type="dc:Point" x="402" y="380" />
+        <di:waypoint xsi:type="dc:Point" x="487" y="380" />
+        <di:waypoint xsi:type="dc:Point" x="487" y="526" />
+        <di:waypoint xsi:type="dc:Point" x="532" y="526" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="457" y="447" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_16pwjmw_di" bpmnElement="StartEvent_0z55xd6">
+        <dc:Bounds x="228" y="362" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="218" y="402" width="57" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataStoreReference_0elmzu3_di" bpmnElement="DataStoreReference_0elmzu3">
+        <dc:Bounds x="327" y="489" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="340" y="543" width="25" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0cd19w8_di" bpmnElement="Task_0x10x9r">
+        <dc:Bounds x="532" y="486" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1d9anh6_di" bpmnElement="Task_1io3xtp">
+        <dc:Bounds x="620" y="202" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ManualTask_1f5pgxo_di" bpmnElement="Task_15r08ui">
+        <dc:Bounds x="758" y="202" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1pxordn_di" bpmnElement="Task_02ejw45">
+        <dc:Bounds x="302" y="340" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0nofw76_di" bpmnElement="SequenceFlow_0nofw76">
+        <di:waypoint xsi:type="dc:Point" x="941" y="380" />
+        <di:waypoint xsi:type="dc:Point" x="976" y="380" />
+        <di:waypoint xsi:type="dc:Point" x="976" y="380" />
+        <di:waypoint xsi:type="dc:Point" x="1008" y="380" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="991" y="374" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_0gggjvr_di" bpmnElement="Task_0ltq38t">
+        <dc:Bounds x="841" y="340" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0qkwnbg_di" bpmnElement="DataOutputAssociation_0qkwnbg">
+        <di:waypoint xsi:type="dc:Point" x="351" y="420" />
+        <di:waypoint xsi:type="dc:Point" x="351" y="489" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_1pv2cw8_di" bpmnElement="DataInputAssociation_1pv2cw8">
+        <di:waypoint xsi:type="dc:Point" x="377" y="527" />
+        <di:waypoint xsi:type="dc:Point" x="415" y="546" />
+        <di:waypoint xsi:type="dc:Point" x="532" y="546" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_1a4fmqt_di" bpmnElement="DataInputAssociation_1a4fmqt">
+        <di:waypoint xsi:type="dc:Point" x="372" y="539" />
+        <di:waypoint xsi:type="dc:Point" x="400" y="575" />
+        <di:waypoint xsi:type="dc:Point" x="670" y="575" />
+        <di:waypoint xsi:type="dc:Point" x="670" y="282" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
