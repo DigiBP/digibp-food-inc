@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_1xptk0j">
     <bpmn:participant id="Participant_1d8t9fl" name="Food Service" processRef="Process_pizza-service-technical-workflow" />
     <bpmn:participant id="Participant_164kw4m" name="Customer" />
-    <bpmn:messageFlow id="MessageFlow_1p9vk0n" name="Email" sourceRef="Participant_164kw4m" targetRef="StartEvent_0z55xd6" />
+    <bpmn:messageFlow id="MessageFlow_1p9vk0n" name="Order email from WebShop" sourceRef="Participant_164kw4m" targetRef="StartEvent_0z55xd6" />
     <bpmn:messageFlow id="MessageFlow_192dkc0" name="Pizza" sourceRef="Task_1io3xtp" targetRef="Participant_164kw4m" />
     <bpmn:messageFlow id="MessageFlow_1oi1z0a" name="Money" sourceRef="Participant_164kw4m" targetRef="Task_15r08ui" />
     <bpmn:messageFlow id="MessageFlow_0lsjbrw" name="Receipt" sourceRef="Task_15r08ui" targetRef="Participant_164kw4m" />
@@ -42,15 +42,15 @@
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="pizzaType" label="Pizza" type="string" />
-          <camunda:formField id="pizzaSize" label="Grösse" type="string" />
+          <camunda:formField id="pizzaSize" label="Size" type="string" />
           <camunda:formField id="pizzaSauce" label="Sauce" type="string" />
-          <camunda:formField id="pizzaCrust" label="Rand" type="string" />
-          <camunda:formField id="pizzaTopping" label="Belag" type="string" />
-          <camunda:formField id="customerFirstName" label="Vorname" type="string" />
-          <camunda:formField id="customerLastName" label="Nachname" type="string" />
-          <camunda:formField id="customerAddress" label="Lieferadresse" type="string" />
+          <camunda:formField id="pizzaCrust" label="Crust" type="string" />
+          <camunda:formField id="pizzaTopping" label="Topping" type="string" />
+          <camunda:formField id="customerFirstName" label="First name" type="string" />
+          <camunda:formField id="customerLastName" label="Last name" type="string" />
+          <camunda:formField id="customerAddress" label="Customer address" type="string" />
           <camunda:formField id="customerEmail" label="E-Mail" type="string" />
-          <camunda:formField id="pizzaPrice" label="Preis" type="string" />
+          <camunda:formField id="pizzaPrice" label="Price" type="string" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_1v9loiy</bpmn:outgoing>
@@ -61,15 +61,15 @@
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="pizzaType" label="Pizza" type="string" />
-          <camunda:formField id="pizzaSize" label="Grösse" type="string" />
+          <camunda:formField id="pizzaSize" label="Size" type="string" />
           <camunda:formField id="pizzaSauce" label="Sauce" type="string" />
-          <camunda:formField id="pizzaCrust" label="Rand" type="string" />
-          <camunda:formField id="pizzaTopping" label="Belag" type="string" />
-          <camunda:formField id="customerFirstName" label="Vorname" type="string" />
-          <camunda:formField id="customerLastName" label="Nachname" type="string" />
-          <camunda:formField id="customerAddress" label="Lieferadresse" type="string" />
+          <camunda:formField id="pizzaCrust" label="Crust" type="string" />
+          <camunda:formField id="pizzaTopping" label="Topping" type="string" />
+          <camunda:formField id="customerFirstName" label="First name" type="string" />
+          <camunda:formField id="customerLastName" label="Last name" type="string" />
+          <camunda:formField id="customerAddress" label="Customer address" type="string" />
           <camunda:formField id="customerEmail" label="E-Mail" type="string" />
-          <camunda:formField id="pizzaPrice" label="Preis" type="string" />
+          <camunda:formField id="pizzaPrice" label="Price" type="string" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1v9loiy</bpmn:incoming>
@@ -86,7 +86,7 @@
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="pizzaSize" label="Grösse" type="string">
+          <camunda:formField id="pizzaSize" label="Size" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
@@ -96,27 +96,27 @@
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="pizzaCrust" label="Rand" type="string">
+          <camunda:formField id="pizzaCrust" label="Crust" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="pizzaTopping" label="Belag" type="string">
+          <camunda:formField id="pizzaTopping" label="Topping" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="customerFirstName" label="Vorname" type="string">
+          <camunda:formField id="customerFirstName" label="First name" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="customerLastName" label="Nachname" type="string">
+          <camunda:formField id="customerLastName" label="Last name" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="customerAddress" label="Lieferadresse" type="string">
+          <camunda:formField id="customerAddress" label="Customer address" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
@@ -126,7 +126,7 @@
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="pizzaPrice" label="Preis" type="string">
+          <camunda:formField id="pizzaPrice" label="Price" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
@@ -149,7 +149,7 @@
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="pizzaSize" label="Grösse" type="string">
+          <camunda:formField id="pizzaSize" label="Size" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
@@ -159,27 +159,27 @@
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="pizzaCrust" label="Rand" type="string">
+          <camunda:formField id="pizzaCrust" label="Crust" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="pizzaTopping" label="Belag" type="string">
+          <camunda:formField id="pizzaTopping" label="Topping" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="customerFirstName" label="Vorname" type="string">
+          <camunda:formField id="customerFirstName" label="First name" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="customerLastName" label="Nachname" type="string">
+          <camunda:formField id="customerLastName" label="Last name" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="customerAddress" label="Lieferadresse" type="string">
+          <camunda:formField id="customerAddress" label="Customer address" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
@@ -189,12 +189,12 @@
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="pizzaPrice" label="Preis" type="string">
+          <camunda:formField id="pizzaPrice" label="Price" type="string">
             <camunda:validation>
               <camunda:constraint name="readonly" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="pizzaPayment" label="Zahlungsbetrag" type="string" defaultValue="19.90" />
+          <camunda:formField id="pizzaPayment" label="Payment" type="string" defaultValue="19.90" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_03m2lmt</bpmn:incoming>
@@ -229,7 +229,7 @@
         <di:waypoint xsi:type="dc:Point" x="246" y="93" />
         <di:waypoint xsi:type="dc:Point" x="246" y="362" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="261" y="118" width="27" height="12" />
+          <dc:Bounds x="252" y="118" width="82" height="24" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_03m2lmt_di" bpmnElement="SequenceFlow_03m2lmt">

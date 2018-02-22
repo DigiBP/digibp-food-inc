@@ -3,7 +3,7 @@
   <bpmn:collaboration id="Collaboration_1xptk0j">
     <bpmn:participant id="Participant_1d8t9fl" name="Food Service" processRef="Process_1" />
     <bpmn:participant id="Participant_164kw4m" name="Customer" />
-    <bpmn:messageFlow id="MessageFlow_1p9vk0n" name="Email" sourceRef="Participant_164kw4m" targetRef="StartEvent_0z55xd6" />
+    <bpmn:messageFlow id="MessageFlow_1p9vk0n" name="Order email from WebShop" sourceRef="Participant_164kw4m" targetRef="StartEvent_0z55xd6" />
     <bpmn:messageFlow id="MessageFlow_192dkc0" name="Pizza" sourceRef="Task_1io3xtp" targetRef="Participant_164kw4m" />
     <bpmn:messageFlow id="MessageFlow_1oi1z0a" name="Money" sourceRef="Participant_164kw4m" targetRef="Task_15r08ui" />
     <bpmn:messageFlow id="MessageFlow_0lsjbrw" name="Receipt" sourceRef="Task_15r08ui" targetRef="Participant_164kw4m" />
@@ -91,7 +91,7 @@
         <di:waypoint xsi:type="dc:Point" x="246" y="93" />
         <di:waypoint xsi:type="dc:Point" x="246" y="362" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="261" y="118" width="27" height="12" />
+          <dc:Bounds x="248" y="118" width="82" height="24" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Task_0x10x9r_di" bpmnElement="Task_0x10x9r">
