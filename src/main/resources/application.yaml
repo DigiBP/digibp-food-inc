@@ -9,6 +9,8 @@ camunda:
       enabled: true
 
 spring:
+  profiles:
+    active: local
   datasource:
     url: jdbc:h2:file:./data/camunda
     username: sa
