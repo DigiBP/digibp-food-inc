@@ -11,12 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -38,15 +37,13 @@ public class FoodSnapEndpoint {
         processVars.put("customerEmail", foodSnapRequest.getCustomerEmail());
         processVars.put("imageFile", foodSnapRequest.getImageFile().getBytes());
         String processInstanceId = processEngine.getRuntimeService().startProcessInstanceByMessage("food-shot-service-ai-async_order-received", processVars).getProcessInstanceId();
-        BlockingQueue<String> blockingQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<String> blockingQueue = new SynchronousQueue<>();
         queues.put(processInstanceId, blockingQueue);
-        String result = (String) blockingQueue.poll(5, TimeUnit.SECONDS);
+        String result = (String) blockingQueue.poll(10, TimeUnit.SECONDS);
         if (result!=null) {
-            FoodSnapResponse foodSnapResponse = new FoodSnapResponse();
-            foodSnapResponse.setClassification(result);
-            return foodSnapResponse;
+            return new FoodSnapResponse("Your food has been classified as: " + result);
         }
-        return null;
+        return new FoodSnapResponse("Your food will be manually classified.");
     }
 
     private static class FoodSnapRequest {
@@ -89,14 +86,18 @@ public class FoodSnapEndpoint {
     }
 
     private static class FoodSnapResponse {
-        private String classification;
+        private String message;
 
-        public String getClassification() {
-            return classification;
+        FoodSnapResponse(String message) {
+            this.message = message;
         }
 
-        public void setClassification(String classification) {
-            this.classification = classification;
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
         }
     }
 
