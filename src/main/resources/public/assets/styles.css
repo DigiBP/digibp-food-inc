@@ -69,3 +69,8 @@
         opacity: 1
     }
 }
+
+#imageFile {
+  visibility: hidden;
+  position: absolute;
+}

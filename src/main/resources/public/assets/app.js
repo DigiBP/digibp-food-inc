@@ -4,7 +4,6 @@
  */
 
 $(document).ready(function () {
-    $('#imageFile').fileselect();
     $("#form").submit(function (event) {
         event.preventDefault();
         $("#loader").show();
@@ -28,4 +27,12 @@ $(document).ready(function () {
             }
         });
     });
+});
+
+$(document).on('click', '.browse', function(){
+  var file = $(this).parent().parent().parent().find('.file');
+  file.trigger('click');
+});
+$(document).on('change', '.file', function(){
+  $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
 });
