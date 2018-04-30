@@ -83,7 +83,7 @@
         <bpmn:sourceRef>DataObjectReference_0o11i0x</bpmn:sourceRef>
         <bpmn:targetRef>Property_1xp8wja</bpmn:targetRef>
       </bpmn:dataInputAssociation>
-      <bpmn:multiInstanceLoopCharacteristics isSequential="true" camunda:collection="${foodClasses.prop(&#34;foodClass&#34;).elements()}" camunda:elementVariable="foodClass">
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true" camunda:collection="${foodClassesCollection.prop(&#34;foodClasses&#34;).elements()}" camunda:elementVariable="foodClass">
         <bpmn:completionCondition xsi:type="bpmn:tFormalExpression">${foodType!=null}</bpmn:completionCondition>
       </bpmn:multiInstanceLoopCharacteristics>
     </bpmn:businessRuleTask>
@@ -213,10 +213,12 @@ if (foodClasses == null) {
     for (resultClass in classificationResponseObj.images[0].classifiers[0].classes) {
         data[resultClass] = classificationResponseObj.images[0].classifiers[0].classes[resultClass].class;
     }
-    foodClasses = S('{ "foodClass" : ' + JSON.stringify(data) + ' }');
-    execution.setVariable("foodClasses", foodClasses);
+    execution.setVariable("foodClasses", data.toString());
+    foodClassesCollection = S('{ "foodClasses" : ' + JSON.stringify(data) + ' }');
+    execution.setVariable("foodClassesCollection", foodClassesCollection);
 } else {
-    execution.setVariable("foodClasses", S(foodClasses));
+    foodClassesCollection = S('{ "foodClasses" : ' + JSON.stringify(foodClasses.split(",")) + ' }');
+    execution.setVariable("foodClassesCollection", foodClassesCollection);
 }</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:dataObjectReference id="DataObjectReference_0o11i0x" name="Food Rules" dataObjectRef="DataObject_1oow92b" />
