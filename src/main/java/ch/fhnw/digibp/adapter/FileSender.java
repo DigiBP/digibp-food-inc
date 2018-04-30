@@ -20,7 +20,14 @@ public class FileSender {
         RestTemplate restTemplate = new RestTemplate();
         OutputStream outputStream = new ByteArrayOutputStream();
         try {
-            IOUtils.copy((InputStream) execution.getVariable(fileName), outputStream);
+            ByteArrayInputStream byteArrayInputStream = null;
+            Object file = execution.getVariable(fileName);
+            if(!(file instanceof ByteArrayInputStream)) {
+                byteArrayInputStream = new ByteArrayInputStream((byte[]) file);
+            } else{
+                byteArrayInputStream = (ByteArrayInputStream) file;
+            }
+            IOUtils.copy(byteArrayInputStream, outputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
