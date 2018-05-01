@@ -36,14 +36,14 @@ public class FoodSnapEndpoint {
         processVars.put("customerAddress", foodSnapRequest.getCustomerAddress());
         processVars.put("customerEmail", foodSnapRequest.getCustomerEmail());
         processVars.put("imageFile", foodSnapRequest.getImageFile().getBytes());
-        String processInstanceId = processEngine.getRuntimeService().startProcessInstanceByMessage("food-shot-service-ai-async_order-received", processVars).getProcessInstanceId();
+        String processInstanceId = processEngine.getRuntimeService().startProcessInstanceByMessage("food-shot-service-ai-response_order-received", processVars).getProcessInstanceId();
         BlockingQueue<String> blockingQueue = new SynchronousQueue<>();
         queues.put(processInstanceId, blockingQueue);
-        String result = (String) blockingQueue.poll(10, TimeUnit.SECONDS);
+        String result = (String) blockingQueue.poll(15, TimeUnit.SECONDS);
         if (result!=null) {
-            return new FoodSnapResponse("Your food has been classified as: " + result);
+            return new FoodSnapResponse(result);
         }
-        return new FoodSnapResponse("Your food will be manually classified.");
+        return new FoodSnapResponse("Sorry it took longer than expected to classify your food.");
     }
 
     private static class FoodSnapRequest {

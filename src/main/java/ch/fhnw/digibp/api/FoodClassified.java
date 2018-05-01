@@ -21,7 +21,15 @@ public class FoodClassified implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        queues.get(execution.getProcessInstanceId()).put((String) execution.getVariable("foodType"));
-        queues.remove(execution.getProcessInstanceId());
+        if(queues.containsKey(execution.getProcessInstanceId())) {
+            String foodType = (String) execution.getVariable("foodType");
+            String foodClasses = (String) execution.getVariable("foodClasses");
+            if(foodType==null) {
+                queues.get(execution.getProcessInstanceId()).put("Your food will be manually classified.\r\nWatson classified it as: " + foodClasses);
+            } else {
+                queues.get(execution.getProcessInstanceId()).put("Your food has been classified as: " + foodType + "\r\nWatson classified it as: " + foodClasses);
+            }
+            queues.remove(execution.getProcessInstanceId());
+        }
     }
 }
