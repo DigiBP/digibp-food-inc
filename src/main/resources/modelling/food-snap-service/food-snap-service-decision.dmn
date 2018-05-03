@@ -34,7 +34,7 @@
       </rule>
       <rule id="DecisionRule_1wkms5x">
         <inputEntry id="UnaryTests_0alszwl" expressionLanguage="javascript">
-          <text>(/somen|soba|ramen/i).test(foodClass)</text>
+          <text>(/udon|somen|soba|ramen/i).test(foodClass)</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1p2f25t">
           <text>"somen"</text>
