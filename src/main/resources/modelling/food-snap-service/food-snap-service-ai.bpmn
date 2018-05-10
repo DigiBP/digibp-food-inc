@@ -207,6 +207,7 @@ if (foodClasses == null) {
         foodClassesCollection[resultClass] = classificationResponseObj.images[0].classifiers[0].classes[resultClass];
     }
     execution.setVariable("foodClasses", foodClasses.toString());
+    execution.setVariable("foodClassificationData", JSON.stringify(foodClassesCollection));
     execution.setVariable("foodClassesCollection", S(JSON.stringify(foodClassesCollection)));
 } else {
     var foodClasses = foodClasses.split(",");
