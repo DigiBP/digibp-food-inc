@@ -2,15 +2,9 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.14.0">
   <bpmn:collaboration id="Collaboration_1xptk0j">
     <bpmn:participant id="Participant_1d8t9fl" name="Food Service" processRef="Process_food-snap-service-ai-response" />
-    <bpmn:participant id="Participant_0wcbghz" name="iSaaS Integromat" />
-    <bpmn:participant id="Participant_1at547q" name="Gmail API" />
     <bpmn:participant id="Participant_0su87x0" name="IBM Watson Visual Recognition API" />
     <bpmn:messageFlow id="MessageFlow_16nam5g" sourceRef="Task_0xod74e" targetRef="Participant_0su87x0" />
     <bpmn:messageFlow id="MessageFlow_1361ld8" sourceRef="Participant_0su87x0" targetRef="Task_0xod74e" />
-    <bpmn:messageFlow id="MessageFlow_1230sne" sourceRef="Task_0c7sr7q" targetRef="Participant_0wcbghz" />
-    <bpmn:messageFlow id="MessageFlow_0uu7j80" sourceRef="Participant_0wcbghz" targetRef="Task_0c7sr7q" />
-    <bpmn:messageFlow id="MessageFlow_1em73ei" sourceRef="Participant_1at547q" targetRef="Participant_0wcbghz" />
-    <bpmn:messageFlow id="MessageFlow_1rth16c" sourceRef="Participant_0wcbghz" targetRef="Participant_1at547q" />
   </bpmn:collaboration>
   <bpmn:process id="Process_food-snap-service-ai-response" name="Food Snap Service Response" isExecutable="true">
     <bpmn:laneSet>
@@ -199,18 +193,26 @@
       <bpmn:incoming>SequenceFlow_10z2iyz</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0624nlo</bpmn:outgoing>
       <bpmn:script>var foodClasses = execution.getVariable("foodClasses");
+var foodClassesCollection = [];
 if (foodClasses == null) {
     var classificationResponseObj = JSON.parse(classificationResponse);
-    var data = [];
+    var foodClasses = [];
     for (resultClass in classificationResponseObj.images[0].classifiers[0].classes) {
-        data[resultClass] = classificationResponseObj.images[0].classifiers[0].classes[resultClass].class;
+        foodClasses[resultClass] = classificationResponseObj.images[0].classifiers[0].classes[resultClass].class;
+        foodClassesCollection[resultClass] = classificationResponseObj.images[0].classifiers[0].classes[resultClass];
     }
-    execution.setVariable("foodClasses", data.toString());
-    foodClassesCollection = S('{ "foodClasses" : ' + JSON.stringify(data) + ' }');
-    execution.setVariable("foodClassesCollection", foodClassesCollection);
+    execution.setVariable("foodClasses", foodClasses.toString());
+    execution.setVariable("foodClassificationRaw", JSON.stringify(foodClassesCollection));
+    execution.setVariable("foodClassesCollection", S(JSON.stringify(foodClassesCollection)));
 } else {
-    foodClassesCollection = S('{ "foodClasses" : ' + JSON.stringify(foodClasses.split(",")) + ' }');
-    execution.setVariable("foodClassesCollection", foodClassesCollection);
+    var foodClasses = foodClasses.split(",");
+    for (i = 0; i &lt; foodClasses.length; i++) {
+        var classes = {};
+        classes.class = foodClasses[i];
+        classes.score = 1;
+        foodClassesCollection[i] = classes;
+    }
+    execution.setVariable("foodClassesCollection", S(JSON.stringify(foodClassesCollection)));
 }</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="SequenceFlow_0624nlo" sourceRef="Task_0c6u7a6" targetRef="Task_0o5fwm9" />
@@ -222,7 +224,7 @@ if (foodClasses == null) {
         <bpmn:sourceRef>DataObjectReference_0o11i0x</bpmn:sourceRef>
         <bpmn:targetRef>Property_1xp8wja</bpmn:targetRef>
       </bpmn:dataInputAssociation>
-      <bpmn:multiInstanceLoopCharacteristics isSequential="true" camunda:collection="${foodClassesCollection.prop(&#34;foodClasses&#34;).elements()}" camunda:elementVariable="foodClass">
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true" camunda:collection="${foodClassesCollection.elements()}" camunda:elementVariable="classes">
         <bpmn:completionCondition xsi:type="bpmn:tFormalExpression">${foodType!=null}</bpmn:completionCondition>
       </bpmn:multiInstanceLoopCharacteristics>
     </bpmn:businessRuleTask>
@@ -282,7 +284,7 @@ No new message</bpmn:text>
           <dc:Bounds x="238" y="208" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_0fc1akm_di" bpmnElement="Task_0xod74e">
+      <bpmndi:BPMNShape id="ServiceTask_0fc1akm_di" bpmnElement="Task_0xod74e" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
         <dc:Bounds x="302" y="189" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_10z2iyz_di" bpmnElement="SequenceFlow_10z2iyz">
@@ -292,10 +294,10 @@ No new message</bpmn:text>
           <dc:Bounds x="375.5" y="208" width="90" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="BusinessRuleTask_1qf3jlt_di" bpmnElement="Task_0o5fwm9">
+      <bpmndi:BPMNShape id="BusinessRuleTask_1qf3jlt_di" bpmnElement="Task_0o5fwm9" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
         <dc:Bounds x="578" y="189" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ExclusiveGateway_0e98wmu_di" bpmnElement="ExclusiveGateway_0e98wmu" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="ExclusiveGateway_0e98wmu_di" bpmnElement="ExclusiveGateway_0e98wmu" isMarkerVisible="true" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
         <dc:Bounds x="784" y="204" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="775" y="182" width="68" height="12" />
@@ -392,7 +394,7 @@ No new message</bpmn:text>
           <dc:Bounds x="766" y="772" width="19" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_056s369_di" bpmnElement="Task_1syellw">
+      <bpmndi:BPMNShape id="UserTask_056s369_di" bpmnElement="Task_1syellw" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
         <dc:Bounds x="891" y="689" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_1mpwz03_di" bpmnElement="EndEvent_1mpwz03">
@@ -484,12 +486,6 @@ No new message</bpmn:text>
       <bpmndi:BPMNShape id="SendTask_1wrg87x_di" bpmnElement="Task_0c7sr7q">
         <dc:Bounds x="1163" y="576" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Participant_03hfmyu_di" bpmnElement="Participant_0wcbghz" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
-        <dc:Bounds x="1001" y="851" width="413" height="60" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Participant_1yc9thh_di" bpmnElement="Participant_1at547q">
-        <dc:Bounds x="999" y="950" width="416" height="60" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="MessageFlow_16nam5g_di" bpmnElement="MessageFlow_16nam5g">
         <di:waypoint x="316" y="269" />
         <di:waypoint x="316" y="851" />
@@ -505,23 +501,9 @@ No new message</bpmn:text>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_05luqc1_di" bpmnElement="Participant_0su87x0" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
-        <dc:Bounds x="116" y="851" width="481" height="60" />
+        <dc:Bounds x="116" y="851" width="1298" height="60" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="MessageFlow_1230sne_di" bpmnElement="MessageFlow_1230sne">
-        <di:waypoint x="1178" y="656" />
-        <di:waypoint x="1178" y="851" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1148" y="747" width="90" height="13" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="MessageFlow_0uu7j80_di" bpmnElement="MessageFlow_0uu7j80">
-        <di:waypoint x="1249" y="851" />
-        <di:waypoint x="1249" y="656" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1219" y="747" width="90" height="13" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="DataObjectReference_0o11i0x_di" bpmnElement="DataObjectReference_0o11i0x">
+      <bpmndi:BPMNShape id="DataObjectReference_0o11i0x_di" bpmnElement="DataObjectReference_0o11i0x" bioc:stroke="#43A047" bioc:fill="#C8E6C9">
         <dc:Bounds x="610" y="591" width="36" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="638" y="572" width="56" height="12" />
@@ -541,7 +523,7 @@ No new message</bpmn:text>
         <di:waypoint x="628" y="591" />
         <di:waypoint x="628" y="269" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="DataObjectReference_08tqes6_di" bpmnElement="DataObjectReference_08tqes6">
+      <bpmndi:BPMNShape id="DataObjectReference_08tqes6_di" bpmnElement="DataObjectReference_08tqes6" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
         <dc:Bounds x="428" y="724" width="36" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="417" y="681" width="57" height="36" />
@@ -566,20 +548,6 @@ No new message</bpmn:text>
       <bpmndi:BPMNShape id="ScriptTask_1xy2gcb_di" bpmnElement="Task_0c6u7a6">
         <dc:Bounds x="439" y="189" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="MessageFlow_1em73ei_di" bpmnElement="MessageFlow_1em73ei">
-        <di:waypoint x="1224" y="950" />
-        <di:waypoint x="1224" y="911" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1194" y="924" width="90" height="13" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="MessageFlow_1rth16c_di" bpmnElement="MessageFlow_1rth16c">
-        <di:waypoint x="1192" y="911" />
-        <di:waypoint x="1192" y="950" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1162" y="924" width="90" height="13" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ManualTask_1j2672d_di" bpmnElement="Task_1io3xtp">
         <dc:Bounds x="1163" y="64" width="100" height="80" />
       </bpmndi:BPMNShape>
