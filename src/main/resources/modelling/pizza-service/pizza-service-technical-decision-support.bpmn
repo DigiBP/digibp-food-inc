@@ -246,16 +246,6 @@
       <bpmn:extensionElements>
         <camunda:formData businessKey="businessKey">
           <camunda:formField id="businessKey" label="Business Key" type="string" />
-          <camunda:formField id="scoring" type="string" defaultValue=" ">
-            <camunda:validation>
-              <camunda:constraint name="readonly" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="explanation" type="string" defaultValue=" ">
-            <camunda:validation>
-              <camunda:constraint name="readonly" />
-            </camunda:validation>
-          </camunda:formField>
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_0076zmh</bpmn:outgoing>
