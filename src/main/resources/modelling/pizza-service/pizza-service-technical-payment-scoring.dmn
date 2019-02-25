@@ -22,8 +22,8 @@
         </inputValues>
       </input>
       <input id="InputClause_0hc887y" label="Order Volume">
-        <inputExpression id="LiteralExpression_17ilkcs" typeRef="double" expressionLanguage="JavaScript">
-          <text>Number(pizzaPrice)</text>
+        <inputExpression id="LiteralExpression_17ilkcs" typeRef="double">
+          <text>orderVolume</text>
         </inputExpression>
       </input>
       <output id="output_1" label="Scoring" name="scoring" typeRef="string">

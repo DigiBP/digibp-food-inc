@@ -168,6 +168,9 @@
     <bpmn:businessRuleTask id="Task_03hk1p2" name="Score payment" camunda:resultVariable="scoringResult" camunda:decisionRef="Decision_0gbhz03" camunda:mapDecisionResult="singleResult">
       <bpmn:extensionElements>
         <camunda:inputOutput>
+          <camunda:inputParameter name="orderVolume">
+            <camunda:script scriptFormat="JavaScript">Number(pizzaPrice)</camunda:script>
+          </camunda:inputParameter>
           <camunda:outputParameter name="scoring">${scoringResult.scoring}</camunda:outputParameter>
           <camunda:outputParameter name="explanation">${scoringResult.explanation}</camunda:outputParameter>
         </camunda:inputOutput>
