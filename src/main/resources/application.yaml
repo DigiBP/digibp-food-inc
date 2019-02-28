@@ -11,6 +11,10 @@ camunda:
 spring:
   profiles:
     active: local
+  servlet:
+    multipart:
+      max-file-size: 10000000
+      max-request-size: 10000000
 
 #  h2:
 #    console:
