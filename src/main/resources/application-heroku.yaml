@@ -7,3 +7,4 @@ spring:
 service:
   ibm-watson-visual-recognition:
     URL: ${service.ibm-watson-visual-recognition.URL}
+    APIKEY: ${service.ibm-watson-visual-recognition.APIKEY}

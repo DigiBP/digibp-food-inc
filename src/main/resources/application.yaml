@@ -11,14 +11,6 @@ camunda:
 spring:
   profiles:
     active: local
-  datasource:
-    url: jdbc:h2:file:./data/camunda
-    username: sa
-    password: sa
-  http:
-    multipart:
-      max-file-size: 10000000
-      max-request-size: 10000000
 
 #  h2:
 #    console:

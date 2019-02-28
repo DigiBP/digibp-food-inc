@@ -7,6 +7,9 @@ package ch.fhnw.digibp.adapter;
 
 import org.apache.commons.io.IOUtils;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -16,8 +19,11 @@ import java.io.*;
 @Named
 public class FileSender {
 
-    public String sendBinary(DelegateExecution execution, String url, String fileName){
-        RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    RestTemplateBuilder restTemplateBuilder;
+
+    public String sendBinary(DelegateExecution execution, String url, String apikey, String fileName){
+        RestTemplate restTemplate = restTemplateBuilder.basicAuthentication("apikey", apikey).build();
         OutputStream outputStream = new ByteArrayOutputStream();
         try {
             ByteArrayInputStream byteArrayInputStream = null;
