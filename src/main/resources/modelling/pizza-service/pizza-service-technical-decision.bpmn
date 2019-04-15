@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_14tmvr5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.0.1">
   <bpmn:collaboration id="Collaboration_1279bin">
-    <bpmn:participant id="Participant_1ywa8fw" name="Food Service" processRef="Process_pizza-service-technical-decision-support" />
+    <bpmn:participant id="Participant_1ywa8fw" name="Food Service" processRef="Process_pizza-service-technical-decision" />
     <bpmn:participant id="Participant_1m1uurc" name="Customer" />
     <bpmn:messageFlow id="MessageFlow_15mxubn" name="Order" sourceRef="Participant_1m1uurc" targetRef="StartEvent_1" />
     <bpmn:messageFlow id="MessageFlow_1izayms" name="Pizza" sourceRef="Task_1fcf3cg" targetRef="Participant_1m1uurc" />
@@ -10,7 +10,7 @@
     <bpmn:messageFlow id="MessageFlow_0k5d8ff" name="Enquiry" sourceRef="Task_1g2qcye" targetRef="Participant_1m1uurc" />
     <bpmn:messageFlow id="MessageFlow_1ye7llc" name="Order update" sourceRef="Participant_1m1uurc" targetRef="Task_1g2qcye" />
   </bpmn:collaboration>
-  <bpmn:process id="Process_pizza-service-technical-decision-support" isExecutable="true">
+  <bpmn:process id="Process_pizza-service-technical-decision" isExecutable="true">
     <bpmn:laneSet id="LaneSet_1q9yrvk">
       <bpmn:lane id="Lane_04nou6f" name="Courier">
         <bpmn:flowNodeRef>Task_1fcf3cg</bpmn:flowNodeRef>
@@ -19,7 +19,6 @@
       </bpmn:lane>
       <bpmn:lane id="Lane_145y685" name="Pizza Service">
         <bpmn:flowNodeRef>Task_11eiz81</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_03hk1p2</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_0iyjp4e</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>ExclusiveGateway_1f2dgfh</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_1g2qcye</bpmn:flowNodeRef>
@@ -33,7 +32,6 @@
             <bpmn:flowNodeRef>Task_11eiz81</bpmn:flowNodeRef>
           </bpmn:lane>
           <bpmn:lane id="Lane_06fgaz2" name="Automatic">
-            <bpmn:flowNodeRef>Task_03hk1p2</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>EndEvent_0iyjp4e</bpmn:flowNodeRef>
             <bpmn:flowNodeRef>ExclusiveGateway_1f2dgfh</bpmn:flowNodeRef>
           </bpmn:lane>
@@ -165,24 +163,11 @@
         <bpmn:targetRef>DataStoreReference_1qfgu4m</bpmn:targetRef>
       </bpmn:dataOutputAssociation>
     </bpmn:manualTask>
-    <bpmn:businessRuleTask id="Task_03hk1p2" name="Score payment" camunda:resultVariable="scoringResult" camunda:decisionRef="Decision_0gbhz03" camunda:mapDecisionResult="singleResult">
-      <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:inputParameter name="orderVolume">
-            <camunda:script scriptFormat="JavaScript">Number(pizzaPrice)</camunda:script>
-          </camunda:inputParameter>
-          <camunda:outputParameter name="scoring">${scoringResult.scoring}</camunda:outputParameter>
-          <camunda:outputParameter name="explanation">${scoringResult.explanation}</camunda:outputParameter>
-        </camunda:inputOutput>
-      </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_0z0drpe</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1qj6a82</bpmn:outgoing>
-    </bpmn:businessRuleTask>
     <bpmn:endEvent id="EndEvent_0iyjp4e" name="Order cancelled">
       <bpmn:incoming>SequenceFlow_0q51oxl</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1f2dgfh" name="Score?">
-      <bpmn:incoming>SequenceFlow_1qj6a82</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0z0drpe</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0q51oxl</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0c7i80g</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0x10klc</bpmn:outgoing>
@@ -261,8 +246,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_0q51oxl" name="red" sourceRef="ExclusiveGateway_1f2dgfh" targetRef="EndEvent_0iyjp4e">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${scoring == "red"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="SequenceFlow_1qj6a82" sourceRef="Task_03hk1p2" targetRef="ExclusiveGateway_1f2dgfh" />
-    <bpmn:sequenceFlow id="SequenceFlow_0z0drpe" sourceRef="Task_1g2qcye" targetRef="Task_03hk1p2" />
+    <bpmn:sequenceFlow id="SequenceFlow_0z0drpe" sourceRef="Task_1g2qcye" targetRef="ExclusiveGateway_1f2dgfh" />
     <bpmn:sequenceFlow id="SequenceFlow_0x10klc" name="green" sourceRef="ExclusiveGateway_1f2dgfh" targetRef="Task_11eiz81">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${scoring == "green"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -271,7 +255,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_0vu4i4d" sourceRef="Task_11eiz81" targetRef="Task_1fcf3cg" />
     <bpmn:sequenceFlow id="SequenceFlow_0076zmh" sourceRef="StartEvent_1" targetRef="Task_1g2qcye" />
   </bpmn:process>
-  <bpmn:message id="Message_1lvj35e" name="Message_pizza-service-technical-decision-support_order-received" />
+  <bpmn:message id="Message_1lvj35e" name="Message_pizza-service-technical-decision_order-received" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1279bin">
       <bpmndi:BPMNShape id="Participant_1ywa8fw_di" bpmnElement="Participant_1ywa8fw" isHorizontal="true">
@@ -299,9 +283,6 @@
         <di:waypoint x="287" y="397" />
         <di:waypoint x="350" y="397" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="BusinessRuleTask_0k93qe8_di" bpmnElement="Task_03hk1p2">
-        <dc:Bounds x="420" y="474" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="StartEvent_0gjnq8b_di" bpmnElement="StartEvent_1">
         <dc:Bounds x="251" y="380" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -314,10 +295,6 @@
           <dc:Bounds x="541" y="538" width="35" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1qj6a82_di" bpmnElement="SequenceFlow_1qj6a82">
-        <di:waypoint x="520" y="514" />
-        <di:waypoint x="556" y="514" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_0iyjp4e_di" bpmnElement="EndEvent_0iyjp4e">
         <dc:Bounds x="642" y="530" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -371,7 +348,7 @@
       <bpmndi:BPMNEdge id="SequenceFlow_0z0drpe_di" bpmnElement="SequenceFlow_0z0drpe">
         <di:waypoint x="400" y="438" />
         <di:waypoint x="400" y="514" />
-        <di:waypoint x="420" y="514" />
+        <di:waypoint x="556" y="514" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="DataStoreReference_1qfgu4m_di" bpmnElement="DataStoreReference_1qfgu4m">
         <dc:Bounds x="757" y="489" width="50" height="50" />

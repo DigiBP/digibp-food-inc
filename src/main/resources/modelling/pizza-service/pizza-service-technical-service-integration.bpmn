@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_14tmvr5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.0.0-beta.2">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_14tmvr5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.2.4">
   <bpmn:collaboration id="Collaboration_1279bin">
     <bpmn:participant id="Participant_1ywa8fw" name="Food Service" processRef="Process_pizza-service-technical-service-integration" />
     <bpmn:participant id="Participant_1m1uurc" name="Customer" />
@@ -121,11 +121,11 @@ response.pizzaSheetURL;</camunda:script>
           <camunda:formField id="customerAddress" label="Customer address" type="string" />
           <camunda:formField id="customerEmail" label="E-Mail" type="string" />
           <camunda:formField id="pizzaPrice" label="Price" type="string" defaultValue="19.90" />
-          <camunda:formField id="legalEntity" label="Legal Entity" type="enum">
+          <camunda:formField id="legalEntity" label="Legal Entity" type="enum" defaultValue="private">
             <camunda:value id="private" name="Private" />
             <camunda:value id="juristical" name="Juristical" />
           </camunda:formField>
-          <camunda:formField id="paymentMethod" label="Payment Method" type="enum">
+          <camunda:formField id="paymentMethod" label="Payment Method" type="enum" defaultValue="cash">
             <camunda:value id="cash" name="Cash" />
             <camunda:value id="invoice" name="Invoice" />
             <camunda:value id="creditcard" name="Credit Card" />
@@ -377,9 +377,9 @@ out ;</camunda:script>
             </camunda:validation>
           </camunda:formField>
           <camunda:formField id="scoring" label="Scoring" type="enum">
+            <camunda:value id="orange" name="Orange" />
             <camunda:value id="green" name="Green" />
             <camunda:value id="red" name="Red" />
-            <camunda:value id="orange" name="Orange" />
           </camunda:formField>
         </camunda:formData>
       </bpmn:extensionElements>
